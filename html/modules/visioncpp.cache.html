@@ -1,0 +1,179 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>visioncpp.cache &#8212; visioncpp 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="visioncpp 0.0.1 documentation" href="../index.html" />
+    <link rel="up" title="API" href="../api.html" />
+    <link rel="next" title="visioncpp.codegen" href="visioncpp.codegen.html" />
+    <link rel="prev" title="visioncpp.backend" href="visioncpp.backend.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-visioncpp.cache">
+<span id="visioncpp-cache"></span><h1>visioncpp.cache<a class="headerlink" href="#module-visioncpp.cache" title="Permalink to this headline">¶</a></h1>
+<p>VisionCpp caching mechanism.</p>
+<p>Provides a mechanism to cache compiled binaries to amortize compiler
+overheads.</p>
+<dl class="function">
+<dt id="visioncpp.cache.emplace">
+<code class="descclassname">visioncpp.cache.</code><code class="descname">emplace</code><span class="sig-paren">(</span><em>uid</em>, <em>path</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/visioncpp/cache.html#emplace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visioncpp.cache.emplace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Move a binary into cache.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>uid (str): UID.
+path (str): Path to file.</dd>
+<dt>Returns:</dt>
+<dd>str: Path to cached item.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="visioncpp.cache.empty">
+<code class="descclassname">visioncpp.cache.</code><code class="descname">empty</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/visioncpp/cache.html#empty"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visioncpp.cache.empty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Empty the cache.</p>
+<p>Moves the cache directory to the platform-specific Trash.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="visioncpp.cache.get_uid">
+<code class="descclassname">visioncpp.cache.</code><code class="descname">get_uid</code><span class="sig-paren">(</span><em>code</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/visioncpp/cache.html#get_uid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visioncpp.cache.get_uid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute an ID for a piece of code.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>code (str): The code to generate the uid for.</dd>
+<dt>Returns:</dt>
+<dd>str: UID.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="visioncpp.cache.init">
+<code class="descclassname">visioncpp.cache.</code><code class="descname">init</code><span class="sig-paren">(</span><em>path=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/visioncpp/cache.html#init"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visioncpp.cache.init" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize cache.</p>
+<p>This function is automatically called before any caching operation which
+would require it, however users may still call this to set an alternate
+cache location.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>path (str, optional): Path to new cache location.</dd>
+<dt>Returns:</dt>
+<dd>str: Path to cache directory.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="visioncpp.cache.is_cached">
+<code class="descclassname">visioncpp.cache.</code><code class="descname">is_cached</code><span class="sig-paren">(</span><em>uid</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/visioncpp/cache.html#is_cached"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visioncpp.cache.is_cached" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns whether there is a cache entry for the given ID.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>uid (str): UID.</dd>
+<dt>Returns:</dt>
+<dd>bool: True if cached.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="visioncpp.cache.load">
+<code class="descclassname">visioncpp.cache.</code><code class="descname">load</code><span class="sig-paren">(</span><em>uid</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/visioncpp/cache.html#load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visioncpp.cache.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns path to cached item.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>uid (str): UID.</dd>
+<dt>Returns:</dt>
+<dd>str: Path to cached item.</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="../api.html">API</a><ul>
+      <li>Previous: <a href="visioncpp.backend.html" title="previous chapter">visioncpp.backend</a></li>
+      <li>Next: <a href="visioncpp.codegen.html" title="next chapter">visioncpp.codegen</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/modules/visioncpp.cache.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Chris Cummins.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.8</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+      |
+      <a href="../_sources/modules/visioncpp.cache.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

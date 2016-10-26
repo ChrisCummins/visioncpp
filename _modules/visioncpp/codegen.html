@@ -1,0 +1,291 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>visioncpp.codegen &#8212; visioncpp 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="visioncpp 0.0.1 documentation" href="../../index.html" />
+    <link rel="up" title="visioncpp" href="../visioncpp.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for visioncpp.codegen</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+
+<span class="kn">import</span> <span class="nn">visioncpp</span> <span class="k">as</span> <span class="nn">vp</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">defaultdict</span>
+<span class="kn">from</span> <span class="nn">distutils.spawn</span> <span class="k">import</span> <span class="n">find_executable</span>
+<span class="kn">from</span> <span class="nn">subprocess</span> <span class="k">import</span> <span class="n">Popen</span><span class="p">,</span> <span class="n">PIPE</span>
+
+<span class="kn">from</span> <span class="nn">visioncpp</span> <span class="k">import</span> <span class="n">util</span>
+
+
+<div class="viewcode-block" id="library_source"><a class="viewcode-back" href="../../modules/visioncpp.codegen.html#visioncpp.codegen.library_source">[docs]</a><span class="k">def</span> <span class="nf">library_source</span><span class="p">(</span><span class="n">lines</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return source code for a VisionCpp library.</span>
+
+<span class="sd">    The generated code will compile a callable library method</span>
+<span class="sd">    &quot;natvie_expression_tree()&quot;.</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">        lines (str[]): Program implementation.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: Source code</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">program_lines</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;#include &lt;opencv2/opencv.hpp&gt;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;#include &lt;visioncpp.hpp&gt;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;extern </span><span class="se">\&quot;</span><span class="s2">C</span><span class="se">\&quot;</span><span class="s2"> {&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;int native_expression_tree() {&quot;</span><span class="p">,</span>
+    <span class="p">]</span> <span class="o">+</span> <span class="n">lines</span> <span class="o">+</span> <span class="p">[</span>
+        <span class="s2">&quot;}&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;}  // extern </span><span class="se">\&quot;</span><span class="s2">C</span><span class="se">\&quot;</span><span class="s2">&quot;</span>
+    <span class="p">]</span>
+
+    <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">program_lines</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span></div>
+
+
+<div class="viewcode-block" id="get_device"><a class="viewcode-back" href="../../modules/visioncpp.codegen.html#visioncpp.codegen.get_device">[docs]</a><span class="k">def</span> <span class="nf">get_device</span><span class="p">(</span><span class="n">devtype</span><span class="o">=</span><span class="s2">&quot;cpu&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;device&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return the lines to construct a VisionCPP device.</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">        devtype (str, optional): Either &quot;gpu&quot; or &quot;cpu&quot;.</span>
+<span class="sd">        name (str, optional): Name of the constructed device variable.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str[]: C++ lines.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        VisionCppException: If device type is neither &quot;cpu&quot; or &quot;gpu&quot;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">devtype</span> <span class="o">=</span> <span class="n">devtype</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">devtype</span> <span class="o">!=</span> <span class="s2">&quot;cpu&quot;</span> <span class="ow">and</span> <span class="n">devtype</span> <span class="o">!=</span> <span class="s2">&quot;gpu&quot;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">vp</span><span class="o">.</span><span class="n">VisionCppException</span><span class="p">(</span><span class="s2">&quot;Bad device type &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">devtype</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="p">[</span>
+        <span class="s2">&quot;auto </span><span class="si">{name}</span><span class="s2"> = visioncpp::make_device&lt;&quot;</span>
+        <span class="s2">&quot;visioncpp::backend::sycl, &quot;</span>
+        <span class="s2">&quot;visioncpp::device::</span><span class="si">{dev}</span><span class="s2">&gt;();&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dev</span><span class="o">=</span><span class="n">devtype</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+    <span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="find_clang_format"><a class="viewcode-back" href="../../modules/visioncpp.codegen.html#visioncpp.codegen.find_clang_format">[docs]</a><span class="k">def</span> <span class="nf">find_clang_format</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Find clang-format binary.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: Path to clang-format if found, else None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">clang_format</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;val&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">set_if_exists</span><span class="p">(</span><span class="n">executable</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">clang_format</span><span class="p">[</span><span class="s2">&quot;val&quot;</span><span class="p">]:</span>
+            <span class="n">clang_format</span><span class="p">[</span><span class="s2">&quot;val&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">find_executable</span><span class="p">(</span><span class="n">executable</span><span class="p">)</span>
+
+    <span class="n">set_if_exists</span><span class="p">(</span><span class="s2">&quot;clang-format&quot;</span><span class="p">)</span>
+    <span class="n">set_if_exists</span><span class="p">(</span><span class="s2">&quot;clang-format-3.6&quot;</span><span class="p">)</span>
+    <span class="n">set_if_exists</span><span class="p">(</span><span class="s2">&quot;clang-format-3.8&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">clang_format</span><span class="p">[</span><span class="s2">&quot;val&quot;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="clang_format"><a class="viewcode-back" href="../../modules/visioncpp.codegen.html#visioncpp.codegen.clang_format">[docs]</a><span class="k">def</span> <span class="nf">clang_format</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">clang_format</span><span class="o">=</span><span class="n">find_clang_format</span><span class="p">()):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Run clang-format over C++ code.</span>
+
+<span class="sd">    This function is safe to call, regardless of whether clang-format is</span>
+<span class="sd">    present on the system. If clang-format is not found, the returned code</span>
+<span class="sd">    is the same as the input.</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">        code (str): C++ code.</span>
+<span class="sd">        clang_format (str, optional): Path to clang-format.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: Formatted C++ code.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">clang_format</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Could not find clang-format. Is it installed?&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">code</span>
+
+    <span class="n">process</span> <span class="o">=</span> <span class="n">Popen</span><span class="p">([</span><span class="n">clang_format</span><span class="p">],</span> <span class="n">stdin</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">PIPE</span><span class="p">)</span>
+    <span class="n">stdout</span><span class="p">,</span> <span class="n">stderr</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">communicate</span><span class="p">(</span><span class="n">code</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">stderr</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">stderr</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">),</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">process</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">stdout</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="process_expression"><a class="viewcode-back" href="../../modules/visioncpp.codegen.html#visioncpp.codegen.process_expression">[docs]</a><span class="k">def</span> <span class="nf">process_expression</span><span class="p">(</span><span class="n">root</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Process an expression tree into a linear sequence of nodes.</span>
+
+<span class="sd">    TODO: Refactor the node name assignment into node construction.</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">        root (VisionCpp.Operation): Expression tree.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        VisionCpp.Operation []: Serialized expression tree.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">name_ids</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">pipeline</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">node</span> <span class="o">=</span> <span class="n">root</span>
+    <span class="k">while</span> <span class="n">node</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Generate a unique node name:</span>
+        <span class="n">typename</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">node</span><span class="p">)</span><span class="o">.</span><span class="n">__name__</span>
+        <span class="n">name_ids</span><span class="p">[</span><span class="n">typename</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">node</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{type}</span><span class="s2">_</span><span class="si">{id}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="n">typename</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">name_ids</span><span class="p">[</span><span class="n">typename</span><span class="p">])</span>
+
+        <span class="n">pipeline</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+        <span class="n">node</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">parent</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">pipeline</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="generate"><a class="viewcode-back" href="../../modules/visioncpp.codegen.html#visioncpp.codegen.generate">[docs]</a><span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="n">expression</span><span class="p">,</span> <span class="n">devtype</span><span class="p">,</span> <span class="n">use_clang_format</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate C++ code for an expression tree.</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">        expression (VisionCpp.Operation): Root of the expression tree.</span>
+<span class="sd">        devtype (str, optional): Execution device type.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: C++ code.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">pipeline</span> <span class="o">=</span> <span class="n">process_expression</span><span class="p">(</span><span class="n">expression</span><span class="p">)</span>
+
+    <span class="n">lines</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">lines</span> <span class="o">+=</span> <span class="n">get_device</span><span class="p">(</span><span class="n">devtype</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">append_node</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">attr</span><span class="p">):</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">call_if_attribute</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">line</span><span class="p">:</span>
+            <span class="n">lines</span> <span class="o">+=</span> <span class="n">line</span>
+
+    <span class="k">def</span> <span class="nf">get_pipeline_stage</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">,</span> <span class="n">stage</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">pipeline</span><span class="p">:</span>
+            <span class="n">append_node</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="s2">&quot;_</span><span class="si">{}</span><span class="s2">_code&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">stage</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">is_repeating</span><span class="p">(</span><span class="n">pipeline</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">pipeline</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">util</span><span class="o">.</span><span class="n">get_attribute</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="s2">&quot;repeating&quot;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="c1"># Inputs:</span>
+    <span class="n">lines</span> <span class="o">+=</span> <span class="p">[</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">// inputs:&quot;</span><span class="p">]</span>
+    <span class="n">get_pipeline_stage</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">,</span> <span class="s2">&quot;input&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">is_repeating</span><span class="p">(</span><span class="n">pipeline</span><span class="p">):</span>
+        <span class="n">lines</span> <span class="o">+=</span> <span class="p">[</span><span class="s2">&quot;for (;;) {  // main loop&quot;</span><span class="p">]</span>
+
+    <span class="c1"># Compute scope:</span>
+    <span class="n">lines</span> <span class="o">+=</span> <span class="p">[</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">{  // compute scope&quot;</span><span class="p">]</span>
+    <span class="n">get_pipeline_stage</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">,</span> <span class="s2">&quot;compute&quot;</span><span class="p">)</span>
+    <span class="n">lines</span> <span class="o">+=</span> <span class="p">[</span><span class="s2">&quot;}  // compute scope&quot;</span><span class="p">]</span>
+
+    <span class="c1"># Outputs:</span>
+    <span class="n">lines</span> <span class="o">+=</span> <span class="p">[</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">// outputs:&quot;</span><span class="p">]</span>
+    <span class="n">get_pipeline_stage</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">,</span> <span class="s2">&quot;output&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">is_repeating</span><span class="p">(</span><span class="n">pipeline</span><span class="p">):</span>
+        <span class="n">lines</span> <span class="o">+=</span> <span class="p">[</span><span class="s2">&quot;}  // main loop&quot;</span><span class="p">]</span>
+
+    <span class="n">code</span> <span class="o">=</span> <span class="n">library_source</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">use_clang_format</span><span class="p">:</span>
+        <span class="n">code</span> <span class="o">=</span> <span class="n">clang_format</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+
+    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Generated C++ code:</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">code</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">code</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  <li><a href="../visioncpp.html">visioncpp</a><ul>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Chris Cummins.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.8</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,220 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>visioncpp.backend &#8212; visioncpp 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="visioncpp 0.0.1 documentation" href="../index.html" />
+    <link rel="up" title="API" href="../api.html" />
+    <link rel="next" title="visioncpp.cache" href="visioncpp.cache.html" />
+    <link rel="prev" title="visioncpp" href="../visioncpp.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-visioncpp.backend">
+<span id="visioncpp-backend"></span><h1>visioncpp.backend<a class="headerlink" href="#module-visioncpp.backend" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="visioncpp.backend.check_for_computecpp">
+<code class="descclassname">visioncpp.backend.</code><code class="descname">check_for_computecpp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/visioncpp/backend.html#check_for_computecpp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visioncpp.backend.check_for_computecpp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check that ComputeCpp files exist.</p>
+<dl class="docutils">
+<dt>Raises:</dt>
+<dd>VisionCppException: If ComputeCpp file(s) are mising.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="visioncpp.backend.compile_cpp_code">
+<code class="descclassname">visioncpp.backend.</code><code class="descname">compile_cpp_code</code><span class="sig-paren">(</span><em>code</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/visioncpp/backend.html#compile_cpp_code"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visioncpp.backend.compile_cpp_code" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compile C++ code to a dynamic library.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>code (str): C++ socde.</dd>
+<dt>Returns:</dt>
+<dd>str: Path to binary.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="visioncpp.backend.get_device_cflags">
+<code class="descclassname">visioncpp.backend.</code><code class="descname">get_device_cflags</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/visioncpp/backend.html#get_device_cflags"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visioncpp.backend.get_device_cflags" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get integration header compilation cflags.</p>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd>str[]: List of compiler flags.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="visioncpp.backend.get_host_cflags">
+<code class="descclassname">visioncpp.backend.</code><code class="descname">get_host_cflags</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/visioncpp/backend.html#get_host_cflags"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visioncpp.backend.get_host_cflags" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get compilation cflags.</p>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd>str[]: List of compiler flags.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="visioncpp.backend.get_ldflags">
+<code class="descclassname">visioncpp.backend.</code><code class="descname">get_ldflags</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/visioncpp/backend.html#get_ldflags"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visioncpp.backend.get_ldflags" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get link flags.</p>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd>str[]: List of link flags.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="visioncpp.backend.host_compile">
+<code class="descclassname">visioncpp.backend.</code><code class="descname">host_compile</code><span class="sig-paren">(</span><em>code</em>, <em>stub</em>, <em>dir='/tmp'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/visioncpp/backend.html#host_compile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visioncpp.backend.host_compile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compile object file.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>code (str): C++ code.
+stub (str): Path to integration header.
+dir (str, optional): Output directory.</dd>
+<dt>Returns:</dt>
+<dd>str: Path to compiled object file.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="visioncpp.backend.invoke_computecpp">
+<code class="descclassname">visioncpp.backend.</code><code class="descname">invoke_computecpp</code><span class="sig-paren">(</span><em>args</em>, <em>stdin=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/visioncpp/backend.html#invoke_computecpp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visioncpp.backend.invoke_computecpp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Invoke ComputeCpp compute++ compiler.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>args (str[]): Arguments.
+stdin (str, optional): Compiler input.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="visioncpp.backend.link">
+<code class="descclassname">visioncpp.backend.</code><code class="descname">link</code><span class="sig-paren">(</span><em>host</em>, <em>dir='/tmp'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/visioncpp/backend.html#link"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visioncpp.backend.link" title="Permalink to this definition">¶</a></dt>
+<dd><p>Link object file to library.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>host (str): Path to object file.
+dir (str, optional): Output directory.</dd>
+<dt>Returns:</dt>
+<dd>str: Path to generated executable.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="visioncpp.backend.run_binary">
+<code class="descclassname">visioncpp.backend.</code><code class="descname">run_binary</code><span class="sig-paren">(</span><em>binary</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/visioncpp/backend.html#run_binary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visioncpp.backend.run_binary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute a program binary.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>binary (str): Path to binary.</dd>
+<dt>Raises:</dt>
+<dd>VisionCppException: If program returns non-zero exit status.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="visioncpp.backend.stub_file">
+<code class="descclassname">visioncpp.backend.</code><code class="descname">stub_file</code><span class="sig-paren">(</span><em>code</em>, <em>dir='/tmp'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/visioncpp/backend.html#stub_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visioncpp.backend.stub_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compile integration header.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>code (str): C++ code.
+dir (str, optional): Output directory.</dd>
+<dt>Returns:</dt>
+<dd>str: Path to compiled integration header file.</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="../api.html">API</a><ul>
+      <li>Previous: <a href="../visioncpp.html" title="previous chapter">visioncpp</a></li>
+      <li>Next: <a href="visioncpp.cache.html" title="next chapter">visioncpp.cache</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/modules/visioncpp.backend.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Chris Cummins.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.8</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+      |
+      <a href="../_sources/modules/visioncpp.backend.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,206 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>visioncpp.cache &#8212; visioncpp 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="visioncpp 0.0.1 documentation" href="../../index.html" />
+    <link rel="up" title="visioncpp" href="../visioncpp.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for visioncpp.cache</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">VisionCpp caching mechanism.</span>
+
+<span class="sd">Provides a mechanism to cache compiled binaries to amortize compiler</span>
+<span class="sd">overheads.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">visioncpp</span> <span class="k">as</span> <span class="nn">vp</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">from</span> <span class="nn">hashlib</span> <span class="k">import</span> <span class="n">sha256</span>
+<span class="kn">from</span> <span class="nn">shutil</span> <span class="k">import</span> <span class="n">move</span>
+<span class="kn">from</span> <span class="nn">send2trash</span> <span class="k">import</span> <span class="n">send2trash</span>
+
+<span class="c1"># Cache directory.</span>
+<span class="n">cacheroot</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s2">&quot;~/.cache/visioncpp&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_bin_cache_path</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot; Get path to binaries cache. &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cacheroot</span><span class="p">,</span> <span class="s2">&quot;bin&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="init"><a class="viewcode-back" href="../../modules/visioncpp.cache.html#visioncpp.cache.init">[docs]</a><span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Initialize cache.</span>
+
+<span class="sd">    This function is automatically called before any caching operation which</span>
+<span class="sd">    would require it, however users may still call this to set an alternate</span>
+<span class="sd">    cache location.</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">        path (str, optional): Path to new cache location.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: Path to cache directory.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">cacheroot</span>
+
+    <span class="k">if</span> <span class="n">path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">_bin_cache_path</span><span class="p">()):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">_bin_cache_path</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">cacheroot</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">cacheroot</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">init</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="get_uid"><a class="viewcode-back" href="../../modules/visioncpp.cache.html#visioncpp.cache.get_uid">[docs]</a><span class="k">def</span> <span class="nf">get_uid</span><span class="p">(</span><span class="n">code</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute an ID for a piece of code.</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">        code (str): The code to generate the uid for.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: UID.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">sha256</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">code</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="is_cached"><a class="viewcode-back" href="../../modules/visioncpp.cache.html#visioncpp.cache.is_cached">[docs]</a><span class="k">def</span> <span class="nf">is_cached</span><span class="p">(</span><span class="n">uid</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns whether there is a cache entry for the given ID.</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">        uid (str): UID.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: True if cached.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_bin_cache_path</span><span class="p">(),</span> <span class="n">uid</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="load"><a class="viewcode-back" href="../../modules/visioncpp.cache.html#visioncpp.cache.load">[docs]</a><span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">uid</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns path to cached item.</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">        uid (str): UID.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: Path to cached item.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_bin_cache_path</span><span class="p">(),</span> <span class="n">uid</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="emplace"><a class="viewcode-back" href="../../modules/visioncpp.cache.html#visioncpp.cache.emplace">[docs]</a><span class="k">def</span> <span class="nf">emplace</span><span class="p">(</span><span class="n">uid</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Move a binary into cache.</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">        uid (str): UID.</span>
+<span class="sd">        path (str): Path to file.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: Path to cached item.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">init</span><span class="p">()</span>
+    <span class="n">dest_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_bin_cache_path</span><span class="p">(),</span> <span class="n">uid</span><span class="p">)</span>
+
+    <span class="k">assert</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+    <span class="k">assert</span><span class="p">(</span><span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">dest_path</span><span class="p">))</span>
+
+    <span class="n">move</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">dest_path</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">dest_path</span></div>
+
+
+<div class="viewcode-block" id="empty"><a class="viewcode-back" href="../../modules/visioncpp.cache.html#visioncpp.cache.empty">[docs]</a><span class="k">def</span> <span class="nf">empty</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Empty the cache.</span>
+
+<span class="sd">    Moves the cache directory to the platform-specific Trash.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">send2trash</span><span class="p">(</span><span class="n">cacheroot</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  <li><a href="../visioncpp.html">visioncpp</a><ul>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Chris Cummins.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.8</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
