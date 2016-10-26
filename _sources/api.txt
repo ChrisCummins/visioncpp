@@ -11,5 +11,4 @@ Submodules
 .. toctree::
    :glob:
 
-   visioncpp
    modules/*
