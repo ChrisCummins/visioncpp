@@ -45,9 +45,71 @@
           <div class="body" role="main">
             
   <div class="section" id="tutorial">
-<h1>Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this headline">¶</a></h1>
-<p>See the <a class="reference external" href="http://chriscummins.cc/visioncpp">API Documentation</a> for
-further details.</p>
+<span id="tutorial"></span><h1>Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this headline">¶</a></h1>
+<p>This tutorial will cover the basics of setting up a VisionCpp environment and writing a simple, GPU-accelerated python program.</p>
+<p>We begin by first installing VisionCpp. To do this, head to the <a class="reference external" href="https://www.codeplay.com/products/computesuite/computecpp">Codeplay site</a> and download and install the <em>ComputeCpp Community Edition Beta</em>. Make a note of the installation location; for the remainder of this tutorial we will assume it has been installed in <code class="docutils literal"><span class="pre">~/computecpp</span></code>.</p>
+<p>Next, check that you have python installed:</p>
+<div class="highlight-sh"><div class="highlight"><pre><span></span>$ python --version
+Python 3.5.2
+</pre></div>
+</div>
+<p>For the remainder of this tutorial we will assume you are using Python 3, but other versions are supported, see <a class="reference external" href="https://travis-ci.org/ChrisCummins/visioncpp">Travis CI</a> for a list of supported versions.</p>
+<p>Next, we will create a python <a class="reference external" href="http://docs.python-guide.org/en/latest/dev/virtualenvs/">virtual environment</a> for installing VisionCpp tests:</p>
+<div class="highlight-sh"><div class="highlight"><pre><span></span>$ <span class="nb">cd</span> ~
+$ virtualenv visioncpp
+$ <span class="nb">source</span> visioncpp/bin/activate
+</pre></div>
+</div>
+<p>Your shell prefix will be prefaced with <code class="docutils literal"><span class="pre">(visioncpp)</span></code>, and any installed packages will go into this newly created virtual environment. We will now install visioncpp, and the interactive shell <a class="reference external" href="https://ipython.org/">ipython</a>:</p>
+<div class="highlight-sh"><div class="highlight"><pre><span></span><span class="o">(</span>visioncpp<span class="o">)</span> $ pip install visioncpp ipython
+</pre></div>
+</div>
+<p>That&#8217;s it! VisionCpp is now installed. Begin an ipython session to try it out:</p>
+<div class="highlight-sh"><div class="highlight"><pre><span></span><span class="o">(</span>visioncpp<span class="o">)</span> $ ./visioncpp/bin/ipython
+</pre></div>
+</div>
+<p>We begin the python session by importing the visioncpp module:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="kn">import</span> <span class="nn">visioncpp</span> <span class="kn">as</span> <span class="nn">vp</span>
+</pre></div>
+</div>
+<p>You can call <code class="docutils literal"><span class="pre">help()</span></code> with any VisionCpp object to see the interface documentation. Try it on the main module to see an overview of the API:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">2</span><span class="p">]:</span> <span class="n">help</span><span class="p">(</span><span class="n">vp</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Before we can use it, we need to tell the python interface where to find ComputeCpp. Do this by calling the <code class="docutils literal"><span class="pre">init()</span></code> function with the path that you made a note of earlier:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">3</span><span class="p">]:</span> <span class="n">vp</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="s2">&quot;~/computecpp&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>VisionCpp has two main parts:</p>
+<ol class="simple">
+<li>An interface for constructing complex vision processing jobs as expression trees.</li>
+<li>A runtime for executing expression trees using optimized native code with GPU acceleration.</li>
+</ol>
+<p>We&#8217;ll now create an expression tree. Download this <a class="reference external" href="https://github.com/ChrisCummins/visioncpp/raw/development/contrib/python/examples/lena.jpg">test image</a> and create a vision node for an image:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">4</span><span class="p">]:</span> <span class="nb">input</span> <span class="o">=</span> <span class="n">vp</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="s2">&quot;~/Downloads/lena.jpg&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We will then add a few nodes to the expression tree, performing some simple colour space conversions before finally showing the resulting image:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">5</span><span class="p">]:</span> <span class="n">node1</span> <span class="o">=</span> <span class="n">vp</span><span class="o">.</span><span class="n">BGRToRGB</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+<span class="n">In</span> <span class="p">[</span><span class="mi">6</span><span class="p">]:</span> <span class="n">node2</span> <span class="o">=</span> <span class="n">vp</span><span class="o">.</span><span class="n">U8C3ToF32C3</span><span class="p">(</span><span class="n">node1</span><span class="p">)</span>
+<span class="n">In</span> <span class="p">[</span><span class="mi">7</span><span class="p">]:</span> <span class="n">node3</span> <span class="o">=</span> <span class="n">vp</span><span class="o">.</span><span class="n">RGBToHSV</span><span class="p">(</span><span class="n">node2</span><span class="p">)</span>
+<span class="n">In</span> <span class="p">[</span><span class="mi">8</span><span class="p">]:</span> <span class="n">node4</span> <span class="o">=</span> <span class="n">vp</span><span class="o">.</span><span class="n">HSVToRGB</span><span class="p">(</span><span class="n">node3</span><span class="p">)</span>
+<span class="n">In</span> <span class="p">[</span><span class="mi">9</span><span class="p">]:</span> <span class="n">node5</span> <span class="o">=</span> <span class="n">vp</span><span class="o">.</span><span class="n">F32C3ToU8C3</span><span class="p">(</span><span class="n">node4</span><span class="p">)</span>
+<span class="n">In</span> <span class="p">[</span><span class="mi">10</span><span class="p">]:</span> <span class="n">node6</span> <span class="o">=</span> <span class="n">vp</span><span class="o">.</span><span class="n">RGBToBGR</span><span class="p">(</span><span class="n">node5</span><span class="p">)</span>
+<span class="n">In</span> <span class="p">[</span><span class="mi">11</span><span class="p">]:</span> <span class="n">output</span> <span class="o">=</span> <span class="n">vp</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">node6</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>As you can see, expression trees are constructed from top to bottom, with each node pointing to one or more parent nodes. Expression trees are regular python objects, you can inspect them by calling print:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">12</span><span class="p">]:</span> <span class="k">print</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+<span class="n">show</span><span class="o">&lt;</span><span class="n">RGBToBGR</span><span class="o">&lt;</span><span class="n">F32C3ToU8C3</span><span class="o">&lt;</span><span class="n">HSVToRGB</span><span class="o">&lt;</span><span class="n">RGBToHSV</span><span class="o">&lt;</span><span class="n">U8C3ToF32C3</span><span class="o">&lt;</span><span class="n">BGRToRGB</span><span class="o">&lt;</span><span class="n">Image</span><span class="o">&lt;/</span><span class="n">home</span><span class="o">/</span><span class="n">codeplay</span><span class="o">/</span><span class="n">Downloads</span><span class="o">/</span><span class="n">lena</span><span class="o">.</span><span class="n">jpg</span><span class="o">&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;</span>
+</pre></div>
+</div>
+<p>Once we have created our expression tree, we can invoke <code class="docutils literal"><span class="pre">vp.run()</span></code> to execute it. What happends under the hood when <code class="docutils literal"><span class="pre">run()</span></code> is invoked is that the expression tree is flattened to a sequence of operations, which is used to generated highly optimized C++ code that is compiled and executed. Let&#8217;s try it:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">13</span><span class="p">]:</span> <span class="n">vp</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>A window will open to display the result of the expression tree. Press any button to close the window and return to the python interface. The first time that an expression tree is executed, there will be a small delay while the runtime compiles it to native code. This compiled code is then cached so that future invocations of the expression tree will occur instantaneously.</p>
+<p>And that&#8217;s the end of this short tutorial. You now have a working VisionCpp environment, and know how to construct and execute your own expression trees. For further information on the kinds of operations that VisionCpp supports, see the full <a class="reference external" href="http://chriscummins.cc/visioncpp/api.html">API Documentation</a>.</p>
 </div>
 
 
