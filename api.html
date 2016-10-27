@@ -48,9 +48,58 @@
 <span id="api"></span><h1>API<a class="headerlink" href="#module-visioncpp" title="Permalink to this headline">¶</a></h1>
 <p>Python interface to VisionCpp.</p>
 <dl class="class">
+<dt id="visioncpp.AbsSub">
+<em class="property">class </em><code class="descclassname">visioncpp.</code><code class="descname">AbsSub</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visioncpp.html#AbsSub"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visioncpp.AbsSub" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uses the sycl::fabs to return the difference.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="visioncpp.Add">
+<em class="property">class </em><code class="descclassname">visioncpp.</code><code class="descname">Add</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visioncpp.html#Add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visioncpp.Add" title="Permalink to this definition">¶</a></dt>
+<dd><p>This functor adds two pixels.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="visioncpp.AniDiff">
+<em class="property">class </em><code class="descclassname">visioncpp.</code><code class="descname">AniDiff</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visioncpp.html#AniDiff"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visioncpp.AniDiff" title="Permalink to this definition">¶</a></dt>
+<dd><p>This functor applies anisotropic diffusion for 3 channels.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="visioncpp.AniDiff_Grey">
+<em class="property">class </em><code class="descclassname">visioncpp.</code><code class="descname">AniDiff_Grey</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visioncpp.html#AniDiff_Grey"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visioncpp.AniDiff_Grey" title="Permalink to this definition">¶</a></dt>
+<dd><p>This functor applies anisotropic diffusion for one channel.</p>
+</dd></dl>
+
+<dl class="class">
 <dt id="visioncpp.BGRToRGB">
 <em class="property">class </em><code class="descclassname">visioncpp.</code><code class="descname">BGRToRGB</code><span class="sig-paren">(</span><em>parent</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visioncpp.html#BGRToRGB"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visioncpp.BGRToRGB" title="Permalink to this definition">¶</a></dt>
 <dd><p>This functor reorders channels BGR to RGB.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="visioncpp.Broadcast">
+<em class="property">class </em><code class="descclassname">visioncpp.</code><code class="descname">Broadcast</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visioncpp.html#Broadcast"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visioncpp.Broadcast" title="Permalink to this definition">¶</a></dt>
+<dd><p>This functor sets the pixel to the value passed in.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="visioncpp.Div">
+<em class="property">class </em><code class="descclassname">visioncpp.</code><code class="descname">Div</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visioncpp.html#Div"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visioncpp.Div" title="Permalink to this definition">¶</a></dt>
+<dd><p>This functor divides two matrices element-wise.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="visioncpp.DownsampleAverage">
+<em class="property">class </em><code class="descclassname">visioncpp.</code><code class="descname">DownsampleAverage</code><span class="sig-paren">(</span><em>parent</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visioncpp.html#DownsampleAverage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visioncpp.DownsampleAverage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Downsampling filter using average technique Other filters could be added
+for different numbers of channels.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="visioncpp.DownsampleClosest">
+<em class="property">class </em><code class="descclassname">visioncpp.</code><code class="descname">DownsampleClosest</code><span class="sig-paren">(</span><em>parent</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visioncpp.html#DownsampleClosest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visioncpp.DownsampleClosest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Downsampling filter using closest technique.</p>
 </dd></dl>
 
 <dl class="class">
@@ -60,9 +109,51 @@
 </dd></dl>
 
 <dl class="class">
+<dt id="visioncpp.Filter2D">
+<em class="property">class </em><code class="descclassname">visioncpp.</code><code class="descname">Filter2D</code><span class="sig-paren">(</span><em>parent</em>, <em>arg</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visioncpp.html#Filter2D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visioncpp.Filter2D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applying the general convolution for 3 channel Image.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="visioncpp.Filter2D_One">
+<em class="property">class </em><code class="descclassname">visioncpp.</code><code class="descname">Filter2D_One</code><span class="sig-paren">(</span><em>parent</em>, <em>arg</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visioncpp.html#Filter2D_One"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visioncpp.Filter2D_One" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applying the general convolution for 1 channel Image.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="visioncpp.FloatToF32C3">
+<em class="property">class </em><code class="descclassname">visioncpp.</code><code class="descname">FloatToF32C3</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visioncpp.html#FloatToF32C3"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visioncpp.FloatToF32C3" title="Permalink to this definition">¶</a></dt>
+<dd><p>It replicates one channel to 3 channels.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="visioncpp.FloatToU8C1">
+<em class="property">class </em><code class="descclassname">visioncpp.</code><code class="descname">FloatToU8C1</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visioncpp.html#FloatToU8C1"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visioncpp.FloatToU8C1" title="Permalink to this definition">¶</a></dt>
+<dd><p>It converts float to uchar converting [0.0f, 1.0f] to [0, 255].</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="visioncpp.FloatToUChar">
+<em class="property">class </em><code class="descclassname">visioncpp.</code><code class="descname">FloatToUChar</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visioncpp.html#FloatToUChar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visioncpp.FloatToUChar" title="Permalink to this definition">¶</a></dt>
+<dd><p>It converts float to uchar.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="visioncpp.GaussianBlur3x3">
+<em class="property">class </em><code class="descclassname">visioncpp.</code><code class="descname">GaussianBlur3x3</code><span class="sig-paren">(</span><em>parent</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visioncpp.html#GaussianBlur3x3"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visioncpp.GaussianBlur3x3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applying the Gaussian blur 3x3.</p>
+</dd></dl>
+
+<dl class="class">
 <dt id="visioncpp.HSVToRGB">
 <em class="property">class </em><code class="descclassname">visioncpp.</code><code class="descname">HSVToRGB</code><span class="sig-paren">(</span><em>parent</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visioncpp.html#HSVToRGB"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visioncpp.HSVToRGB" title="Permalink to this definition">¶</a></dt>
 <dd><p>Functor converts HSV to color RGB.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="visioncpp.HSVToU8C3">
+<em class="property">class </em><code class="descclassname">visioncpp.</code><code class="descname">HSVToU8C3</code><span class="sig-paren">(</span><em>parent</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visioncpp.html#HSVToU8C3"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visioncpp.HSVToU8C3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Functor allows displaying HSV.</p>
 </dd></dl>
 
 <dl class="class">
@@ -72,9 +163,39 @@
 </dd></dl>
 
 <dl class="class">
-<dt id="visioncpp.NeighbourOperation">
-<em class="property">class </em><code class="descclassname">visioncpp.</code><code class="descname">NeighbourOperation</code><a class="reference internal" href="_modules/visioncpp.html#NeighbourOperation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visioncpp.NeighbourOperation" title="Permalink to this definition">¶</a></dt>
+<dt id="visioncpp.Median">
+<em class="property">class </em><code class="descclassname">visioncpp.</code><code class="descname">Median</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visioncpp.html#Median"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visioncpp.Median" title="Permalink to this definition">¶</a></dt>
+<dd><p>This functor implements a median filter.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="visioncpp.Merge2Chns">
+<em class="property">class </em><code class="descclassname">visioncpp.</code><code class="descname">Merge2Chns</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visioncpp.html#Merge2Chns"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visioncpp.Merge2Chns" title="Permalink to this definition">¶</a></dt>
+<dd><p>This functor merges 2 matrices into one matrix of 2 channels.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="visioncpp.Mul">
+<em class="property">class </em><code class="descclassname">visioncpp.</code><code class="descname">Mul</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visioncpp.html#Mul"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visioncpp.Mul" title="Permalink to this definition">¶</a></dt>
+<dd><p>This functor implements an element-wise matrix multiplication.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="visioncpp.NeighbourOpWithArg">
+<em class="property">class </em><code class="descclassname">visioncpp.</code><code class="descname">NeighbourOpWithArg</code><span class="sig-paren">(</span><em>parent</em>, <em>arg</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visioncpp.html#NeighbourOpWithArg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visioncpp.NeighbourOpWithArg" title="Permalink to this definition">¶</a></dt>
 <dd><p>VisionCpp neighbour operation type.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="visioncpp.NeighbourOperation">
+<em class="property">class </em><code class="descclassname">visioncpp.</code><code class="descname">NeighbourOperation</code><span class="sig-paren">(</span><em>parent</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visioncpp.html#NeighbourOperation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visioncpp.NeighbourOperation" title="Permalink to this definition">¶</a></dt>
+<dd><p>VisionCpp neighbour operation type.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="visioncpp.OpWithArgs">
+<em class="property">class </em><code class="descclassname">visioncpp.</code><code class="descname">OpWithArgs</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visioncpp.html#OpWithArgs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visioncpp.OpWithArgs" title="Permalink to this definition">¶</a></dt>
+<dd><p>VisionCpp pointwise operation type.</p>
 </dd></dl>
 
 <dl class="class">
@@ -90,15 +211,82 @@
 </dd></dl>
 
 <dl class="class">
+<dt id="visioncpp.PowerOf2">
+<em class="property">class </em><code class="descclassname">visioncpp.</code><code class="descname">PowerOf2</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visioncpp.html#PowerOf2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visioncpp.PowerOf2" title="Permalink to this definition">¶</a></dt>
+<dd><p>This functor implements the power of 2 of one matrix.</p>
+</dd></dl>
+
+<dl class="class">
 <dt id="visioncpp.RGBToBGR">
 <em class="property">class </em><code class="descclassname">visioncpp.</code><code class="descname">RGBToBGR</code><span class="sig-paren">(</span><em>parent</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visioncpp.html#RGBToBGR"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visioncpp.RGBToBGR" title="Permalink to this definition">¶</a></dt>
 <dd><p>This functor reorders channels BGR to RGB.</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="visioncpp.RGBToGREY">
+<em class="property">class </em><code class="descclassname">visioncpp.</code><code class="descname">RGBToGREY</code><span class="sig-paren">(</span><em>parent</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visioncpp.html#RGBToGREY"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visioncpp.RGBToGREY" title="Permalink to this definition">¶</a></dt>
+<dd><p>This functor performs RGB to GREY convertion.</p>
+<p>Uses the following rule: GREY &lt;- 0.299f * R + 0,587f * G + 0.114 * B.</p>
+</dd></dl>
+
+<dl class="class">
 <dt id="visioncpp.RGBToHSV">
 <em class="property">class </em><code class="descclassname">visioncpp.</code><code class="descname">RGBToHSV</code><span class="sig-paren">(</span><em>parent</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visioncpp.html#RGBToHSV"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visioncpp.RGBToHSV" title="Permalink to this definition">¶</a></dt>
 <dd><p>Functor converts RGB to HSV color space.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="visioncpp.Scale">
+<em class="property">class </em><code class="descclassname">visioncpp.</code><code class="descname">Scale</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visioncpp.html#Scale"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visioncpp.Scale" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scales the pixel value of an image by a factor.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="visioncpp.ScaleChannelOne">
+<em class="property">class </em><code class="descclassname">visioncpp.</code><code class="descname">ScaleChannelOne</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visioncpp.html#ScaleChannelOne"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visioncpp.ScaleChannelOne" title="Permalink to this definition">¶</a></dt>
+<dd><p>This functor applies anisotropic diffusion for 3 channels.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="visioncpp.ScaleChannelTwo">
+<em class="property">class </em><code class="descclassname">visioncpp.</code><code class="descname">ScaleChannelTwo</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visioncpp.html#ScaleChannelTwo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visioncpp.ScaleChannelTwo" title="Permalink to this definition">¶</a></dt>
+<dd><p>This custom functor changes 2 channel by factor passed via float f.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="visioncpp.ScaleChannelZero">
+<em class="property">class </em><code class="descclassname">visioncpp.</code><code class="descname">ScaleChannelZero</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visioncpp.html#ScaleChannelZero"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visioncpp.ScaleChannelZero" title="Permalink to this definition">¶</a></dt>
+<dd><p>This functor applies anisotropic diffusion for 3 channels.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="visioncpp.SepFilterCol">
+<em class="property">class </em><code class="descclassname">visioncpp.</code><code class="descname">SepFilterCol</code><span class="sig-paren">(</span><em>parent</em>, <em>arg</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visioncpp.html#SepFilterCol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visioncpp.SepFilterCol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Separable filter for cols.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="visioncpp.SepFilterRow">
+<em class="property">class </em><code class="descclassname">visioncpp.</code><code class="descname">SepFilterRow</code><span class="sig-paren">(</span><em>parent</em>, <em>arg</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visioncpp.html#SepFilterRow"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visioncpp.SepFilterRow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Separable filter for rows.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="visioncpp.SepGaussCol3">
+<em class="property">class </em><code class="descclassname">visioncpp.</code><code class="descname">SepGaussCol3</code><span class="sig-paren">(</span><em>parent</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visioncpp.html#SepGaussCol3"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visioncpp.SepGaussCol3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applying the general convolution for 3 channel Image.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="visioncpp.SepGaussRow3">
+<em class="property">class </em><code class="descclassname">visioncpp.</code><code class="descname">SepGaussRow3</code><span class="sig-paren">(</span><em>parent</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visioncpp.html#SepGaussRow3"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visioncpp.SepGaussRow3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applying the general convolution for 3 channel Image.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="visioncpp.Sub">
+<em class="property">class </em><code class="descclassname">visioncpp.</code><code class="descname">Sub</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visioncpp.html#Sub"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visioncpp.Sub" title="Permalink to this definition">¶</a></dt>
+<dd><p>This functor subtracts 2 images.</p>
 </dd></dl>
 
 <dl class="class">
@@ -110,6 +298,18 @@
 <code class="descname">parent</code><em class="property"> = None</em><a class="headerlink" href="#visioncpp.TerminalOperation.parent" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+</dd></dl>
+
+<dl class="class">
+<dt id="visioncpp.Thresh">
+<em class="property">class </em><code class="descclassname">visioncpp.</code><code class="descname">Thresh</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visioncpp.html#Thresh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visioncpp.Thresh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements a binary threshold.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="visioncpp.U8C1ToFloat">
+<em class="property">class </em><code class="descclassname">visioncpp.</code><code class="descname">U8C1ToFloat</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visioncpp.html#U8C1ToFloat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visioncpp.U8C1ToFloat" title="Permalink to this definition">¶</a></dt>
+<dd><p>It converts uchar to float converting range [0, 255] to [0.0f, 1.0f].</p>
 </dd></dl>
 
 <dl class="class">
@@ -161,8 +361,7 @@ devtype (string, optional): Execution device.</dd>
 <dd><p>Node to display an image.</p>
 </dd></dl>
 
-<div class="section" id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+<p>Additional submodules:</p>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="modules/visioncpp.backend.html">visioncpp.backend</a></li>
@@ -172,22 +371,13 @@ devtype (string, optional): Execution device.</dd>
 </ul>
 </div>
 </div>
-</div>
 
 
           </div>
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">API</a><ul>
-<li><a class="reference internal" href="#submodules">Submodules</a></li>
-</ul>
-</li>
-</ul>
-<div class="relations">
+        <div class="sphinxsidebarwrapper"><div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>

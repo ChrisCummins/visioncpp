@@ -49,21 +49,18 @@
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Python interface to VisionCpp.</span>
 <span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Chris Cummins&quot;</span>
 <span class="n">__email__</span> <span class="o">=</span> <span class="s2">&quot;chrisc.101@gmail.com&quot;</span>
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2016 Codeplay Software Limited&quot;</span>
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;Apache License, Version 2.0&quot;</span>
-
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-
 
 <div class="viewcode-block" id="VisionCppException"><a class="viewcode-back" href="../api.html#visioncpp.VisionCppException">[docs]</a><span class="k">class</span> <span class="nc">VisionCppException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    VisionCpp module exception.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">pass</span></div>
-
 
 <span class="kn">from</span> <span class="nn">visioncpp</span> <span class="k">import</span> <span class="n">backend</span>
 <span class="kn">from</span> <span class="nn">visioncpp</span> <span class="k">import</span> <span class="n">codegen</span>
@@ -169,11 +166,65 @@
         <span class="p">]</span></div>
 
 
+<div class="viewcode-block" id="OpWithArgs"><a class="viewcode-back" href="../api.html#visioncpp.OpWithArgs">[docs]</a><span class="k">class</span> <span class="nc">OpWithArgs</span><span class="p">(</span><span class="n">Operation</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    VisionCpp pointwise operation type.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="k">assert</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="n">args</span>
+
+    <span class="k">def</span> <span class="nf">_compute_code</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="s2">&quot;auto </span><span class="si">{name}</span><span class="s2"> = visioncpp::point_operation&lt;&quot;</span>
+            <span class="s2">&quot;visioncpp::OP_</span><span class="si">{type}</span><span class="s2">&gt;(</span><span class="si">{argnames}</span><span class="s2">);&quot;</span>
+            <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                    <span class="nb">type</span><span class="o">=</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
+                    <span class="n">argnames</span><span class="o">=</span><span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">]))</span>
+        <span class="p">]</span></div>
+
+
 <div class="viewcode-block" id="NeighbourOperation"><a class="viewcode-back" href="../api.html#visioncpp.NeighbourOperation">[docs]</a><span class="k">class</span> <span class="nc">NeighbourOperation</span><span class="p">(</span><span class="n">Operation</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    VisionCpp neighbour operation type.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">pass</span></div>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+    <span class="k">def</span> <span class="nf">_compute_code</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="s2">&quot;auto </span><span class="si">{name}</span><span class="s2"> = visioncpp::point_operation&lt;&quot;</span>
+            <span class="s2">&quot;visioncpp::OP_</span><span class="si">{type}</span><span class="s2">&gt;(</span><span class="si">{parent}</span><span class="s2">);&quot;</span>
+            <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                    <span class="nb">type</span><span class="o">=</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
+                    <span class="n">parent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="NeighbourOpWithArg"><a class="viewcode-back" href="../api.html#visioncpp.NeighbourOpWithArg">[docs]</a><span class="k">class</span> <span class="nc">NeighbourOpWithArg</span><span class="p">(</span><span class="n">Operation</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    VisionCpp neighbour operation type.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">arg</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="n">arg</span>
+
+    <span class="k">def</span> <span class="nf">_compute_code</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="s2">&quot;auto </span><span class="si">{name}</span><span class="s2"> = visioncpp::point_operation&lt;&quot;</span>
+            <span class="s2">&quot;visioncpp::OP_</span><span class="si">{type}</span><span class="s2">&gt;(</span><span class="si">{parent}</span><span class="s2">, </span><span class="si">{arg}</span><span class="s2">);&quot;</span>
+            <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                    <span class="nb">type</span><span class="o">=</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
+                    <span class="n">parent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                    <span class="n">arg</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">arg</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{node}</span><span class="s1">&lt;</span><span class="si">{base}</span><span class="s1">, </span><span class="si">{arg}</span><span class="s1">&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">node</span><span class="o">=</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
+            <span class="n">base</span><span class="o">=</span><span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="p">),</span>
+            <span class="n">arg</span><span class="o">=</span><span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arg</span><span class="p">))</span></div>
 
 
 <span class="c1"># Terminal Operations:</span>
@@ -253,8 +304,8 @@
     <span class="k">def</span> <span class="nf">_input_code</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">nbytes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">channels</span>
         <span class="k">return</span> <span class="n">_shared_ptr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_data&quot;</span><span class="p">,</span> <span class="n">nbytes</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span>
-            <span class="s2">&quot;cv::VideoCapture </span><span class="si">{name}</span><span class="s2">_cap(</span><span class="si">{devid}</span><span class="s2">);&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-                                                           <span class="n">devid</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device_id</span><span class="p">),</span>
+            <span class="s2">&quot;cv::VideoCapture </span><span class="si">{name}</span><span class="s2">_cap(</span><span class="si">{devid}</span><span class="s2">);&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">devid</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device_id</span><span class="p">),</span>
             <span class="s2">&quot;if (!</span><span class="si">{name}</span><span class="s2">_cap.isOpened()) {{&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">),</span>
             <span class="p">(</span><span class="s2">&quot;  std::cerr &lt;&lt; </span><span class="se">\&quot;</span><span class="s2">Could not open capture device </span><span class="si">{devid}</span><span class="se">\&quot;</span><span class="s2"> &quot;</span>
              <span class="s2">&quot;&lt;&lt; std::endl;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">devid</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device_id</span><span class="p">),</span>
@@ -343,16 +394,9 @@
     <span class="k">pass</span></div>
 
 
-<div class="viewcode-block" id="RGBToHSV"><a class="viewcode-back" href="../api.html#visioncpp.RGBToHSV">[docs]</a><span class="k">class</span> <span class="nc">RGBToHSV</span><span class="p">(</span><span class="n">PointOperation</span><span class="p">):</span>
+<div class="viewcode-block" id="F32C3ToU8C3"><a class="viewcode-back" href="../api.html#visioncpp.F32C3ToU8C3">[docs]</a><span class="k">class</span> <span class="nc">F32C3ToU8C3</span><span class="p">(</span><span class="n">PointOperation</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Functor converts RGB to HSV color space.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">pass</span></div>
-
-
-<div class="viewcode-block" id="RGBToBGR"><a class="viewcode-back" href="../api.html#visioncpp.RGBToBGR">[docs]</a><span class="k">class</span> <span class="nc">RGBToBGR</span><span class="p">(</span><span class="n">PointOperation</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This functor reorders channels BGR to RGB.</span>
+<span class="sd">    This functor performs conversion from [0.0f, 1.0f] to [0, 255].</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">pass</span></div>
 
@@ -364,6 +408,36 @@
     <span class="k">pass</span></div>
 
 
+<div class="viewcode-block" id="HSVToU8C3"><a class="viewcode-back" href="../api.html#visioncpp.HSVToU8C3">[docs]</a><span class="k">class</span> <span class="nc">HSVToU8C3</span><span class="p">(</span><span class="n">PointOperation</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Functor allows displaying HSV.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="RGBToBGR"><a class="viewcode-back" href="../api.html#visioncpp.RGBToBGR">[docs]</a><span class="k">class</span> <span class="nc">RGBToBGR</span><span class="p">(</span><span class="n">PointOperation</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This functor reorders channels BGR to RGB.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="RGBToGREY"><a class="viewcode-back" href="../api.html#visioncpp.RGBToGREY">[docs]</a><span class="k">class</span> <span class="nc">RGBToGREY</span><span class="p">(</span><span class="n">PointOperation</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This functor performs RGB to GREY convertion.</span>
+
+<span class="sd">    Uses the following rule: GREY &lt;- 0.299f * R + 0,587f * G + 0.114 * B.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="RGBToHSV"><a class="viewcode-back" href="../api.html#visioncpp.RGBToHSV">[docs]</a><span class="k">class</span> <span class="nc">RGBToHSV</span><span class="p">(</span><span class="n">PointOperation</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Functor converts RGB to HSV color space.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+
 <div class="viewcode-block" id="U8C3ToF32C3"><a class="viewcode-back" href="../api.html#visioncpp.U8C3ToF32C3">[docs]</a><span class="k">class</span> <span class="nc">U8C3ToF32C3</span><span class="p">(</span><span class="n">PointOperation</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This functor performs conversion from [0, 255] to [0.0f, 1.0f].</span>
@@ -371,9 +445,206 @@
     <span class="k">pass</span></div>
 
 
-<div class="viewcode-block" id="F32C3ToU8C3"><a class="viewcode-back" href="../api.html#visioncpp.F32C3ToU8C3">[docs]</a><span class="k">class</span> <span class="nc">F32C3ToU8C3</span><span class="p">(</span><span class="n">PointOperation</span><span class="p">):</span>
+<div class="viewcode-block" id="Filter2D"><a class="viewcode-back" href="../api.html#visioncpp.Filter2D">[docs]</a><span class="k">class</span> <span class="nc">Filter2D</span><span class="p">(</span><span class="n">NeighbourOpWithArg</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This functor performs conversion from [0.0f, 1.0f] to [0, 255].</span>
+<span class="sd">    Applying the general convolution for 3 channel Image.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="Filter2D_One"><a class="viewcode-back" href="../api.html#visioncpp.Filter2D_One">[docs]</a><span class="k">class</span> <span class="nc">Filter2D_One</span><span class="p">(</span><span class="n">NeighbourOpWithArg</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Applying the general convolution for 1 channel Image.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="GaussianBlur3x3"><a class="viewcode-back" href="../api.html#visioncpp.GaussianBlur3x3">[docs]</a><span class="k">class</span> <span class="nc">GaussianBlur3x3</span><span class="p">(</span><span class="n">NeighbourOperation</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Applying the Gaussian blur 3x3.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="SepFilterRow"><a class="viewcode-back" href="../api.html#visioncpp.SepFilterRow">[docs]</a><span class="k">class</span> <span class="nc">SepFilterRow</span><span class="p">(</span><span class="n">NeighbourOpWithArg</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Separable filter for rows.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="SepFilterCol"><a class="viewcode-back" href="../api.html#visioncpp.SepFilterCol">[docs]</a><span class="k">class</span> <span class="nc">SepFilterCol</span><span class="p">(</span><span class="n">NeighbourOpWithArg</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Separable filter for cols.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="SepGaussRow3"><a class="viewcode-back" href="../api.html#visioncpp.SepGaussRow3">[docs]</a><span class="k">class</span> <span class="nc">SepGaussRow3</span><span class="p">(</span><span class="n">NeighbourOperation</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Applying the general convolution for 3 channel Image.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="SepGaussCol3"><a class="viewcode-back" href="../api.html#visioncpp.SepGaussCol3">[docs]</a><span class="k">class</span> <span class="nc">SepGaussCol3</span><span class="p">(</span><span class="n">NeighbourOperation</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Applying the general convolution for 3 channel Image.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="DownsampleAverage"><a class="viewcode-back" href="../api.html#visioncpp.DownsampleAverage">[docs]</a><span class="k">class</span> <span class="nc">DownsampleAverage</span><span class="p">(</span><span class="n">NeighbourOperation</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Downsampling filter using average technique Other filters could be added</span>
+<span class="sd">    for different numbers of channels.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="DownsampleClosest"><a class="viewcode-back" href="../api.html#visioncpp.DownsampleClosest">[docs]</a><span class="k">class</span> <span class="nc">DownsampleClosest</span><span class="p">(</span><span class="n">NeighbourOperation</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Downsampling filter using closest technique.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="AbsSub"><a class="viewcode-back" href="../api.html#visioncpp.AbsSub">[docs]</a><span class="k">class</span> <span class="nc">AbsSub</span><span class="p">(</span><span class="n">OpWithArgs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Uses the sycl::fabs to return the difference.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="Add"><a class="viewcode-back" href="../api.html#visioncpp.Add">[docs]</a><span class="k">class</span> <span class="nc">Add</span><span class="p">(</span><span class="n">OpWithArgs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This functor adds two pixels.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="AniDiff_Grey"><a class="viewcode-back" href="../api.html#visioncpp.AniDiff_Grey">[docs]</a><span class="k">class</span> <span class="nc">AniDiff_Grey</span><span class="p">(</span><span class="n">OpWithArgs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This functor applies anisotropic diffusion for one channel.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="AniDiff"><a class="viewcode-back" href="../api.html#visioncpp.AniDiff">[docs]</a><span class="k">class</span> <span class="nc">AniDiff</span><span class="p">(</span><span class="n">OpWithArgs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This functor applies anisotropic diffusion for 3 channels.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="Div"><a class="viewcode-back" href="../api.html#visioncpp.Div">[docs]</a><span class="k">class</span> <span class="nc">Div</span><span class="p">(</span><span class="n">OpWithArgs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This functor divides two matrices element-wise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="FloatToF32C3"><a class="viewcode-back" href="../api.html#visioncpp.FloatToF32C3">[docs]</a><span class="k">class</span> <span class="nc">FloatToF32C3</span><span class="p">(</span><span class="n">OpWithArgs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    It replicates one channel to 3 channels.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="FloatToU8C1"><a class="viewcode-back" href="../api.html#visioncpp.FloatToU8C1">[docs]</a><span class="k">class</span> <span class="nc">FloatToU8C1</span><span class="p">(</span><span class="n">OpWithArgs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    It converts float to uchar converting [0.0f, 1.0f] to [0, 255].</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="U8C1ToFloat"><a class="viewcode-back" href="../api.html#visioncpp.U8C1ToFloat">[docs]</a><span class="k">class</span> <span class="nc">U8C1ToFloat</span><span class="p">(</span><span class="n">OpWithArgs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    It converts uchar to float converting range [0, 255] to [0.0f, 1.0f].</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="FloatToUChar"><a class="viewcode-back" href="../api.html#visioncpp.FloatToUChar">[docs]</a><span class="k">class</span> <span class="nc">FloatToUChar</span><span class="p">(</span><span class="n">OpWithArgs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    It converts float to uchar.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="Median"><a class="viewcode-back" href="../api.html#visioncpp.Median">[docs]</a><span class="k">class</span> <span class="nc">Median</span><span class="p">(</span><span class="n">OpWithArgs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This functor implements a median filter.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="Merge2Chns"><a class="viewcode-back" href="../api.html#visioncpp.Merge2Chns">[docs]</a><span class="k">class</span> <span class="nc">Merge2Chns</span><span class="p">(</span><span class="n">OpWithArgs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This functor merges 2 matrices into one matrix of 2 channels.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="Mul"><a class="viewcode-back" href="../api.html#visioncpp.Mul">[docs]</a><span class="k">class</span> <span class="nc">Mul</span><span class="p">(</span><span class="n">OpWithArgs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This functor implements an element-wise matrix multiplication.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="PowerOf2"><a class="viewcode-back" href="../api.html#visioncpp.PowerOf2">[docs]</a><span class="k">class</span> <span class="nc">PowerOf2</span><span class="p">(</span><span class="n">OpWithArgs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This functor implements the power of 2 of one matrix.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="Scale"><a class="viewcode-back" href="../api.html#visioncpp.Scale">[docs]</a><span class="k">class</span> <span class="nc">Scale</span><span class="p">(</span><span class="n">OpWithArgs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Scales the pixel value of an image by a factor.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="Sub"><a class="viewcode-back" href="../api.html#visioncpp.Sub">[docs]</a><span class="k">class</span> <span class="nc">Sub</span><span class="p">(</span><span class="n">OpWithArgs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This functor subtracts 2 images.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="Thresh"><a class="viewcode-back" href="../api.html#visioncpp.Thresh">[docs]</a><span class="k">class</span> <span class="nc">Thresh</span><span class="p">(</span><span class="n">OpWithArgs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Implements a binary threshold.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="Broadcast"><a class="viewcode-back" href="../api.html#visioncpp.Broadcast">[docs]</a><span class="k">class</span> <span class="nc">Broadcast</span><span class="p">(</span><span class="n">OpWithArgs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This functor sets the pixel to the value passed in.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="ScaleChannelZero"><a class="viewcode-back" href="../api.html#visioncpp.ScaleChannelZero">[docs]</a><span class="k">class</span> <span class="nc">ScaleChannelZero</span><span class="p">(</span><span class="n">OpWithArgs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This functor applies anisotropic diffusion for 3 channels.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="ScaleChannelOne"><a class="viewcode-back" href="../api.html#visioncpp.ScaleChannelOne">[docs]</a><span class="k">class</span> <span class="nc">ScaleChannelOne</span><span class="p">(</span><span class="n">OpWithArgs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This functor applies anisotropic diffusion for 3 channels.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="ScaleChannelTwo"><a class="viewcode-back" href="../api.html#visioncpp.ScaleChannelTwo">[docs]</a><span class="k">class</span> <span class="nc">ScaleChannelTwo</span><span class="p">(</span><span class="n">OpWithArgs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This custom functor changes 2 channel by factor passed via float f.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">pass</span></div>
 </pre></div>
